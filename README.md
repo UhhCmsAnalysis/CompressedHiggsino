@@ -1,5 +1,5 @@
-# Uhhhh
-This is a package for analyzing events with HH-like final states on the NAF.
+# Compressed higgsino
+This is a package for analyzing events with higgsino-like LSPs on the NAF.
 ## Set up code
 
 ```
