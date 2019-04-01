@@ -12,3 +12,19 @@ mkdir output output/smallchunks output/mediumchunks output/bigchunks
 mkdir jobs
 mkdir pdfs
 ```
+## run FWLite event analyzer script over signal AOD to generate histograms
+### example:
+
+run over a signal file
+```
+python tools/makeEfficiencyHists.py
+```
+this can also take the input file as an argument (wildcards accepted)
+
+## extract histograms from root file to build the efficiency
+### example:
+
+make an efficiency plot
+```
+python tools/plotEfficiency.py histsEDM_pMSSM12_MCMC1_12_865833_25of100nFiles11.root
+```
