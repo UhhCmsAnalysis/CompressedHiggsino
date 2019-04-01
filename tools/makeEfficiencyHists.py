@@ -38,16 +38,6 @@ def main():
 	hDrRandomTrackTrack = TH1F("hDrRandomTrackTrack", "hDrRandomTrackTrack", 50, 0, .2)
 	hChipmLabLengthAll = TH1F("hChipmLabLengthAll", "hChipmLabLengthAll", 50, -0.5, 3.5)
 	hChipmLabLengthPass = TH1F("hChipmLabLengthPass", "hChipmLabLengthPass", 50, -0.5, 3.5)
-	hDrMinVsChipmLabLength = TH2F("hDrMinVsChipmLabLength", "hDrMinVsChipmLabLength", 25, -1.0, 3.0, 20, 0, 0.2)
-	hDrMinPFVsChipmLabLength = TH2F("hDrMinPFVsChipmLabLength", "hDrMinPFVsChipmLabLength", 25, -1.0, 3.0, 20, 0, 0.2)
-
-	hChipmLabLengthVsEtaAll = TH2F("hChipmLabLengthVsEtaAll", "hChipmLabLengthVsEtaAll", 100, -2.4, 2.4, 40, .5, 3.5)
-	hChipmLabLengthVsEta2MohPass = TH2F("hChipmLabLengthVsEta2MohPass", "hChipmLabLengthVsEta2MohPass", 100, -2.4, 2.4, 40, .5, 3.5)
-	hChipmLabLengthVsEta5MohPass = TH2F("hChipmLabLengthVsEtaEta5MohPass", "hChipmLabLengthVsEtaEta5MohPass", 100, -2.4, 2.4, 40, .5, 3.5)
-	hChipmLabLengthVsEtaPixelOnlyPass = TH2F("hChipmLabLengthVsEtaPixelOnlyPass", "hChipmLabLengthVsEtaPixelOnlyPass", 100, -2.4, 2.4, 40, .5, 3.5)
-	hChipmLabLengthVsEtaPixelOnly0MohPass = TH2F("hChipmLabLengthVsEtaPixelOnly0MohPass", "hChipmLabLengthVsEtaPixelOnly0MohPass", 100, -2.4, 2.4, 40, .5, 3.5)	
-
-
 	hSigDeDx = TH1F("hSigDeDx", "hSigDeDx", 100, 0, 25)
 	histoStyler(hSigDeDx, kBlack)
 	hBkgDeDx_ = TH1F("hBkgDeDx", "hBkgDeDx", 100, 0, 25)
@@ -64,15 +54,6 @@ def main():
 	histoStyler(hSigChi2oNdof, kBlack)
 	hBkgChi2oNdof = TH1F("hBkgChi2oNdof", "hBkgChi2oNdof", 100, 0, 10)
 	histoStyler(hBkgChi2oNdof, kBlack)   
-
-	hSigDeDxVsP = TH2F("hSigDeDxVsP", "hSigDeDxVsP", 50,0,1500, 40, 0, 20)
-	hBkgDeDxVsP = TH2F("hBkgDeDxVsP", "hBkgDeDxVsP", 50,0,1500, 40, 0, 20)
-
-
-	#handle_muons  = Handle ("std::vector<reco::Muon>")
-	#label_muons = ('muons')
-
-	#handle_tracks  = Handle ("vector<reco::TrackExtra>")
 	handle_tracks  = Handle ("vector<reco::Track>")
 	label_tracks = ('generalTracks')
 	handle_pfcands  = Handle ("std::vector<reco::PFCandidate>")
@@ -130,7 +111,6 @@ def main():
 			chipmTlv.SetPxPyPzE(gp.px(),gp.py(),gp.pz(),gp.energy())
 			hChipmLabLengthAll.Fill(log10decaylength)
 
-			fillth2(hChipmLabLengthVsEtaAll, gp.eta(), log10decaylength)
 			#===#pfcandidates
 			drmin = 10
 			idx = -1
@@ -143,7 +123,7 @@ def main():
 				if dr<drmin:
 					drmin = dr
 					idx = ipfc
-			hDrMinPFVsChipmLabLength.Fill(log10decaylength, drmin)
+
 			hDrChipmPFCand.Fill(drmin)
 			#===#
 
@@ -169,7 +149,6 @@ def main():
 				print 'best matched pt = ', tracks[idx].pt()
 				print 'drmin', drmin
 			
-			hDrMinVsChipmLabLength.Fill(log10decaylength, drmin)
 			hDrChipmTrack.Fill(drmin)
 			hitpattern = tracks[idx].hitPattern()
 			if not (idx == reco.TrackRef(tracks, idx).index()):
@@ -177,7 +156,6 @@ def main():
 			if not (tracks[idx].numberOfValidHits() == hitpattern.numberOfValidHits()):
 				print 'strangeness!'; exit(0)
 
-			#dedx = dEdxTrack.get(reco.TrackRef(tracks, idx).index()).dEdx()
 			try: dedx = dEdxTrack.get(idx).dEdx()
 			except:
 				dedx = 1
@@ -194,7 +172,6 @@ def main():
 		
 			hChipmLabLengthPass.Fill(log10decaylength)
 			hSigDeDx.Fill(dedx)
-			hSigDeDxVsP.Fill(gp.p(),dedx)
 			hSigChi2oNdof.Fill(chi2ondof)    
 			trkIso = calcTrackIso(track, tracks)
 			trkJetIso = True#calcTrackJetIso(track, jets)
@@ -203,14 +180,6 @@ def main():
 			else: hSigIsolation.Fill(2.4)
 			hSigMiniIsolation.Fill(trkMiniIso)
 			
-			moh = hitpattern.trackerLayersWithoutMeasurement(hitpattern.MISSING_OUTER_HITS)
-			if hitpattern.numberOfValidTrackerHits()==hitpattern.numberOfValidPixelHits(): 
-				fillth2(hChipmLabLengthVsEtaPixelOnlyPass, gp.eta(), log10decaylength)
-				if moh==0: fillth2(hChipmLabLengthVsEtaPixelOnly0MohPass, gp.eta(), log10decaylength)
-			if not moh>=2: continue
-			fillth2(hChipmLabLengthVsEta2MohPass, gp.eta(), log10decaylength)
-			if not moh>=5: continue
-			fillth2(hChipmLabLengthVsEta5MohPass, gp.eta(), log10decaylength)
 			                          
 		for itrack, track in enumerate(tracks):
 			if not track.pt()>10: continue
@@ -222,7 +191,6 @@ def main():
 				dedx = 1
 				print 'no bkg dedx for index', idx                
 			hBkgDeDx_.Fill(dedx)
-			hBkgDeDxVsP.Fill(track.p(),dedx)
 			chi2ondof = track.chi2()/track.ndof()
 			hBkgChi2oNdof.Fill(chi2ondof) 
 			hitpattern = track.hitPattern()
@@ -236,34 +204,22 @@ def main():
 
 
 	fnew.cd()
-
 	hGenChiEtaPos.Write()
 	hGenChiEtaNeg.Write()
-
 	hSigIsolation.Write()
 	hSigMiniIsolation.Write()
 	hBkgIsolation.Write()
 	hBkgMiniIsolation.Write()   
-	
 	hDrChipmTrack.Write()
 	hDrChipmPFCand.Write()
 	hDrRandomTrackTrack.Write()
 	hChipmLabLengthAll.Write()
 	hChipmLabLengthPass.Write()
-	hDrMinVsChipmLabLength.Write()
-	hDrMinPFVsChipmLabLength.Write()
 	hSigDeDx.Write()            
 	hBkgDeDx_.Write()
 	hSigChi2oNdof.Write()            
 	hBkgChi2oNdof.Write()
-	hSigDeDxVsP.Write()
-	hBkgDeDxVsP.Write()
 	print 'just created', fnew.GetName()
-	hChipmLabLengthVsEtaAll.Write()
-	hChipmLabLengthVsEta2MohPass.Write()
-	hChipmLabLengthVsEta5MohPass.Write()
-	hChipmLabLengthVsEtaPixelOnlyPass.Write()	
-	hChipmLabLengthVsEtaPixelOnly0MohPass.Write()
 	fnew.Close()
 
 
