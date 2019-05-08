@@ -50,6 +50,16 @@ units['DPhiPhoPho'] = ''
 units['DmStar'] = ''
 units['MStar'] = 'GeV'
 units['ChipmLabLength'] = 'Log_{10}cm'
+units['Chi20LabLength'] = 'cm'
+units['Chi20LogLabLength'] = 'Log_{10}cm'
+units['Chi20LabLengthPfcMatched'] = 'cm'
+units['Chi20LogLabLengthPfcMatched'] = 'Log_{10}cm'
+units['Chi20LabLengthOnePfcMatched'] = 'cm'
+units['Chi20LogLabLengthOnePfcMatched'] = 'Log_{10}cm'
+units['PtLepton'] = 'GeV'
+units['PtLeptonPfcMatched'] = 'GeV'
+units['PtLeptonPfcMatchedCorrectId'] = 'GeV'
+units['PtAllLeptonPfcMatchedCorrectId'] = 'GeV'
 
 def histoStyler(h,color):
     h.SetLineWidth(2)
